@@ -1,10 +1,138 @@
 <!DOCTYPE html>
 <html lang="tr">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="stylesheet" type="text/css" href="styles.css" />
-	</head>
-	<body>
-		<script src="homepage.js" type="module"></script>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Uzay Efekti</title>
+    
+   
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+      body { 
+        margin: 0; 
+        overflow: hidden; /* Kaydırma çubuklarını gizler */
+        background-color: black; /* Siyah arka plan */
+      }
+      canvas { 
+        display: block; 
+      }
+      
+      /* Yazı için stil */
+      #welcome {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.5); /* Küçük başlar */
+        font-size: 48px;
+        font-family: 'Monospace', sans-serif; 
+        color: white; /* Beyaz renk */
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Yazı gölgesi */
+        opacity: 0; /* Başlangıçta görünmez */
+        animation: fadeInSlide 5s ease-out forwards; /* 5 saniyede ekrana gelme */
+        animation-delay: 1s; /* 1 saniye gecikme */
+      }
+
+      /*  büyüme animasyonu */
+      @keyframes fadeInSlide {
+       
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1); /* Ortada büyüyerek durur */
+        }
+      }
+    </style>
+</head>
+<body>
+  
+  <div id="welcome">Welcome</div> <!-- "Welcome" yazısı ortada -->
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <script>
+    let scene, camera, renderer, stars, starGeo;
+
+    function init() {
+      // Create scene
+      scene = new THREE.Scene();
+      
+      // Setup camera
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 1;
+      camera.rotation.x = Math.PI / 2;
+
+      // Setup renderer
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Create star geometry
+      starGeo = new THREE.BufferGeometry();
+      const starVertices = [];
+      const velocities = [];
+      
+      for (let i = 0; i < 6000; i++) {
+        let x = Math.random() * 600 - 300;
+        let y = Math.random() * 600 - 300;
+        let z = Math.random() * 600 - 300;
+        starVertices.push(x, y, z);
+        velocities.push(0); // Initial velocity for each star
+      }
+
+      // Convert the array to a Float32BufferAttribute and add to geometry
+      starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+      starGeo.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities, 1));
+
+      // Load star texture
+      let sprite = new THREE.TextureLoader().load('star.png');
+
+      // Create material for stars with transparency
+      let starMaterial = new THREE.PointsMaterial({
+        color: 0xaaaaaa,
+        size: 0.7,
+        map: sprite,
+        transparent: true, // Enable transparency
+      });
+
+      // Create points mesh from the geometry and material
+      stars = new THREE.Points(starGeo, starMaterial);
+      scene.add(stars);
+
+      // Start animation loop
+      animate();
+    }
+
+    // Rendering loop
+    function animate() {
+      let positions = starGeo.attributes.position.array;
+      let velocities = starGeo.attributes.velocity.array;
+
+      for (let i = 0; i < positions.length; i += 3) {
+        velocities[i / 3] += 0.001; // Daha yavaş hızlandırma
+        positions[i + 1] -= velocities[i / 3]; // Update Y position
+        
+        if (positions[i + 1] < -200) { // Reset star when it goes off the screen
+          positions[i + 1] = 200;
+          velocities[i / 3] = 0; // Reset velocity
+        }
+      }
+
+      starGeo.attributes.position.needsUpdate = true; // Mark the position attribute as needing an update
+      stars.rotation.y += 0.0001; // Slowly rotate the stars
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    // Update the renderer when the window is resized
+    window.addEventListener('resize', function() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+
+    // Initialize scene
+    init();
+  </script>
+</body>
 </html>
