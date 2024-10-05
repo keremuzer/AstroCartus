@@ -15,7 +15,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 3);
 
 const controls = new TrackballControls(camera, renderer.domElement);
-controls.rotateSpeed = 4;
+controls.rotateSpeed = 3.5;
 controls.zoomSpeed = 1;
 controls.panSpeed = 0.8;
 controls.noZoom = false;
@@ -379,3 +379,36 @@ const planetOrbits = planets.map((planet, index) => {
 
 	return orbitLine;
 });
+
+// Create raycaster and mouse vector
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// Add event listener for clicks
+window.addEventListener("click", onMouseClick, false);
+
+function onMouseClick(event) {
+	// Convert mouse position to normalized device coordinates (-1 to +1)
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	// Update the raycaster with camera and mouse position
+	raycaster.setFromCamera(mouse, camera);
+
+	// Check for intersections with planets and sun
+	const intersects = raycaster.intersectObjects([...planetMeshes, sun]);
+
+	// If there's an intersection, do something
+	if (intersects.length > 0) {
+		const clickedObject = intersects[0].object;
+
+		// Check if the object is a planet or the sun
+		if (planetMeshes.includes(clickedObject)) {
+			const planetIndex = planetMeshes.indexOf(clickedObject);
+			const planetName = planetNames[planetIndex];
+			console.log(`You clicked on ${planetName}!`);
+		} else if (clickedObject === sun) {
+			console.log("You clicked on the sun!");
+		}
+	}
+}
