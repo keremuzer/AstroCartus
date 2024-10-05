@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { TrackballControls } from "three/examples/jsm/Addons.js";
 
 // create scene, camera, renderer and controls
 const renderer = new THREE.WebGLRenderer();
@@ -12,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	5000
 );
-camera.position.set(0, 0, 10);
+camera.position.set(0, 0, 3);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 controls.enablePan = false;
@@ -47,27 +48,133 @@ window.addEventListener("resize", () => {
 });
 
 let mercuryParams = {
-	a: 0.38709843,
-	a_cy: 0.00000037,
-	e: 0.20563661,
+	a_init: 0.38709843,
+	a_cy: 0.0,
+	e_init: 0.20563661,
 	e_cy: 0.00002123,
-	i: 7.00559432,
+	i_init: 7.00559432,
 	i_cy: -0.00590158,
-	L: 252.25166724,
+	L_init: 252.25166724,
 	L_cy: 149472.67486623,
-	longPeri: 77.45771895,
+	longPeri_init: 77.45771895,
 	longPeri_cy: 0.15940013,
-	longNode: 48.33961819,
+	longNode_init: 48.33961819,
 	longNode_cy: -0.12214182,
 };
 
-function updateMercuryParams(T) {
-	mercuryParams.a = mercuryParams.a + mercuryParams.a_cy * T;
-	mercuryParams.e = 0.20563593 + mercuryParams.e_cy * T;
-	mercuryParams.i = 7.00497902 + mercuryParams.i_cy * T;
-	mercuryParams.L = 252.2503235 + mercuryParams.L_cy * T;
-	mercuryParams.longPeri = 77.45779628 + mercuryParams.longPeri_cy * T;
-	mercuryParams.longNode = 48.33076593 + mercuryParams.longNode_cy * T;
+let venusParams = {
+	a_init: 0.72332102,
+	a_cy: -0.00000026,
+	e_init: 0.00676399,
+	e_cy: -0.00005107,
+	i_init: 3.39777545,
+	i_cy: 0.00043494,
+	L_init: 181.9797085,
+	L_cy: 58517.8156026,
+	longPeri_init: 131.76755713,
+	longPeri_cy: 0.05679648,
+	longNode_init: 76.67261496,
+	longNode_cy: -0.27274174,
+};
+
+let marsParams = {
+	a_init: 1.52371243,
+	a_cy: 0.00000097,
+	e_init: 0.09336511,
+	e_cy: 0.00009149,
+	i_init: 1.85181869,
+	i_cy: -0.00724757,
+	L_init: -4.56813164,
+	L_cy: 19140.29934243,
+	longPeri_init: -23.91744784,
+	longPeri_cy: 0.45223625,
+	longNode_init: 49.71320984,
+	longNode_cy: -0.26852431,
+};
+
+let earthParams = {
+	a_init: 1.00000018,
+	a_cy: -0.00000003,
+	e_init: 0.01673163,
+	e_cy: -0.00003661,
+	i_init: -0.00003661,
+	i_cy: -0.01337178,
+	L_init: 100.46691572,
+	L_cy: 35999.37306329,
+	longPeri_init: 102.93005885,
+	longPeri_cy: 0.3179526,
+	longNode_init: -5.11260389,
+	longNode_cy: -0.24123856,
+};
+
+let jupiterParams = {
+	a_init: 5.20248019,
+	a_cy: -0.00002864,
+	e_init: 0.0485359,
+	e_cy: 0.00018026,
+	i_init: 1.29861416,
+	i_cy: -0.00322699,
+	L_init: 34.33479152,
+	L_cy: 3034.90371757,
+	longPeri_init: 14.27495244,
+	longPeri_cy: 0.18199196,
+	longNode_init: 0.13024619,
+	longNode_cy: 113.63998702,
+};
+
+let saturnParams = {
+	a_init: 9.54149883,
+	a_cy: -0.00003065,
+	e_init: 0.05550825,
+	e_cy: -0.00032044,
+	i_init: 2.49424102,
+	i_cy: 0.00451969,
+	L_init: 50.07571329,
+	L_cy: 1222.11494724,
+	longPeri_init: 92.86136063,
+	longPeri_cy: 0.54179478,
+	longNode_init: 113.63998702,
+	longNode_cy: -0.25015002,
+};
+
+let uranusParams = {
+	a_init: 19.18797948,
+	a_cy: -0.00020455,
+	e_init: 0.0468574,
+	e_cy: -0.0000155,
+	i_init: 0.77298127,
+	i_cy: -0.00180155,
+	L_init: 314.20276625,
+	L_cy: 428.49512595,
+	longPeri_init: 172.43404441,
+	longPeri_cy: 0.09266985,
+	longNode_init: 73.96250215,
+	longNode_cy: 0.05739699,
+};
+
+// ! TEKRAR BAK YANLIS GIRDIM SANIRIM
+let neptuneParams = {
+	a_init: 30.06952752,
+	a_cy: 0.00006447,
+	e_init: 0.00895439,
+	e_cy: 0.00000818,
+	i_init: 1.7700552,
+	i_cy: 0.000224,
+	L_init: 304.22289287,
+	L_cy: 218.46515314,
+	longPeri_init: 46.68158724,
+	longPeri_cy: 0.01009938,
+	longNode_init: 46.68158724,
+	longNode_cy: -0.12214182,
+};
+
+function updateParams(obj, T) {
+	obj.a = obj.a_init + obj.a_cy * T;
+	obj.e = obj.e_init + obj.e_cy * T;
+	obj.i = obj.i_init + obj.i_cy * T;
+	obj.L = obj.L_init + obj.L_cy * T;
+	obj.longPeri = obj.longPeri_init + obj.longPeri_cy * T;
+	obj.longNode = obj.longNode_init + obj.longNode_cy * T;
 }
 
 function degToRad(deg) {
@@ -81,17 +188,18 @@ function eccentricAnomalyCalculator(meanAnomaly, e) {
 	for (let i = 0; i < 100; i++) {
 		deltaE =
 			(degToRad(meanAnomaly) -
-				(eccentricAnomaly - degToRad(e) * Math.sin(eccentricAnomaly))) /
-			(1 - degToRad(e) * Math.cos(eccentricAnomaly));
+				(eccentricAnomaly - e * Math.sin(eccentricAnomaly))) /
+			(1 - e * Math.cos(eccentricAnomaly));
 		eccentricAnomaly += deltaE;
 		if (Math.abs(deltaE) < 1e-8) {
 			return eccentricAnomaly;
 		}
 	}
+	throw new Error("Max iterations reached in eccentric anomaly calculation.");
 }
 
 function findXHelio(a, eccentricAnomaly, e) {
-	return a * (Math.cos(eccentricAnomaly) - degToRad(e));
+	return a * (Math.cos(eccentricAnomaly) - e);
 }
 
 function findYHelio(a, eccentricAnomaly, e) {
@@ -101,72 +209,138 @@ function findYHelio(a, eccentricAnomaly, e) {
 let epoch = 2451545.0;
 let currentDay = 2460589.0;
 
-// add mercury
-const mercuryGeometry = new THREE.SphereGeometry(0.1, 32, 32);
-const mercuryTexture = new THREE.TextureLoader().load(
-	"../src/assets/mercury.jpg"
-);
-const mercuryMaterial = new THREE.MeshLambertMaterial({ map: mercuryTexture });
-const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
-scene.add(mercury);
-mercury.rotation.x = Math.PI / 2;
+// Planet parameters
+const planets = [
+	mercuryParams,
+	venusParams,
+	earthParams,
+	marsParams,
+	jupiterParams,
+	saturnParams,
+	uranusParams,
+	neptuneParams,
+];
 
-// Create orbit line
-const orbitPoints = [];
-for (let angle = 0; angle <= 360; angle += 1) {
-	const meanAnomaly = angle;
-	const eccentricAnomaly = eccentricAnomalyCalculator(
-		meanAnomaly,
-		mercuryParams.e
+// Planet names and sizes
+const planetNames = [
+	"mercury",
+	"venus",
+	"earth",
+	"mars",
+	"jupiter",
+	"saturn",
+	"uranus",
+	"neptune",
+];
+
+const planetSizes = {
+	mercury: 0.02,
+	venus: 0.02,
+	earth: 0.02,
+	mars: 0.02,
+	jupiter: 0.08,
+	saturn: 0.05,
+	uranus: 0.05,
+	neptune: 0.09,
+};
+
+// Array to store the planet meshes for later use
+const planetMeshes = [];
+
+// Create and add planets using a for loop
+for (let i = 0; i < planets.length; i++) {
+	const planetName = planetNames[i];
+	const size = planetSizes[planetName];
+
+	const geometry = new THREE.SphereGeometry(size, 32, 32);
+	const texture = new THREE.TextureLoader().load(
+		`../src/assets/${planetName}.jpg`
 	);
-	const xHelio = findXHelio(mercuryParams.a, eccentricAnomaly, mercuryParams.e);
-	const yHelio = findYHelio(mercuryParams.a, eccentricAnomaly, mercuryParams.e);
-	orbitPoints.push(new THREE.Vector3(xHelio * 5, yHelio * 5, 0));
+	const material = new THREE.MeshBasicMaterial({ map: texture });
+	const planetMesh = new THREE.Mesh(geometry, material);
+
+	scene.add(planetMesh);
+
+	planetMeshes.push(planetMesh);
 }
 
-const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
-const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffd700 });
-const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
-scene.add(orbitLine);
-
-// animate scene
-const animate = function () {
-	let T = (currentDay - epoch) / 36525;
-
-	updateMercuryParams(T);
-
-	const meanAnomaly = mercuryParams.L - mercuryParams.longPeri;
-	const eccentricAnomaly = eccentricAnomalyCalculator(
-		meanAnomaly,
-		mercuryParams.e
-	);
-	const xHelio = findXHelio(mercuryParams.a, eccentricAnomaly, mercuryParams.e);
-	const yHelio = findYHelio(mercuryParams.a, eccentricAnomaly, mercuryParams.e);
-
-	currentDay += 0.5;
-
-	console.log(
-		"x" +
-			xHelio +
-			" -- " +
-			"y" +
-			yHelio +
-			" distance: " +
-			Math.sqrt(xHelio ** 2 + yHelio ** 2)
-	);
-
-	mercury.position.set(xHelio * 5, yHelio * 5, 0);
-
-	requestAnimationFrame(animate);
-	renderer.render(scene, camera);
-	controls.update();
-};
-animate();
-
-// add sun
-const sunGeometry = new THREE.SphereGeometry(1, 32, 32);
+// Sun
+const sunGeometry = new THREE.SphereGeometry(0.2, 32, 32);
 const sunTexture = new THREE.TextureLoader().load("../src/assets/sun.jpg");
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
+// rotate the sun
 sun.rotation.x = Math.PI / 2;
+
+function animate() {
+	let T = (currentDay - epoch) / 36525;
+
+	// Loop through each planet to update their positions
+	for (let i = 0; i < planets.length; i++) {
+		const planet = planets[i];
+		const planetMesh = planetMeshes[i]; // Get the corresponding mesh
+
+		// Update the planet's orbital parameters
+		updateParams(planet, T);
+
+		// Calculate the mean anomaly and eccentric anomaly
+		let meanAnomaly = planet.L - planet.longPeri;
+		let eccentricAnomaly = eccentricAnomalyCalculator(meanAnomaly, planet.e);
+
+		// Calculate the heliocentric coordinates
+		let xHelio = findXHelio(planet.a, eccentricAnomaly, planet.e);
+		let yHelio = findYHelio(planet.a, eccentricAnomaly, planet.e);
+
+		// Update the planet's position in the 3D scene
+		planetMesh.position.set(xHelio, yHelio, 0);
+		planetMesh.rotation.x = Math.PI / 2; // Rotate the planet to face the camera
+	}
+
+	// Update current day
+	currentDay += 1;
+
+	// Render the scene and camera
+	renderer.render(scene, camera);
+	requestAnimationFrame(animate);
+}
+animate();
+
+// Orbit colors for each planet
+const orbitColors = {
+	mercury: 0x909090,
+	venus: 0xd4af37,
+	earth: 0x1e90ff,
+	mars: 0xff4500,
+	jupiter: 0xf4a460,
+	saturn: 0xfdd017,
+	uranus: 0x87ceeb,
+	neptune: 0x4169e1,
+};
+
+// Generate orbit lines for each planet
+const planetOrbits = planets.map((planet, index) => {
+	const orbitPoints = [];
+
+	// Create points around the orbit (full 360 degrees)
+	for (let angle = 0; angle <= 360; angle += 1) {
+		const meanAnomaly = angle;
+		const eccentricAnomaly = eccentricAnomalyCalculator(meanAnomaly, planet.e);
+		const xHelio = findXHelio(planet.a, eccentricAnomaly, planet.e);
+		const yHelio = findYHelio(planet.a, eccentricAnomaly, planet.e);
+		orbitPoints.push(new THREE.Vector3(xHelio, yHelio, 0));
+	}
+
+	const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+
+	// Get the color from `orbitColors` based on the index from `planetNames`
+	const planetName = planetNames[index]; // Get the planet's name
+	const orbitMaterial = new THREE.LineBasicMaterial({
+		color: orbitColors[planetName],
+	});
+
+	const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
+	scene.add(orbitLine);
+
+	return orbitLine;
+});
