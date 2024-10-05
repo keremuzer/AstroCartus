@@ -14,18 +14,21 @@ const camera = new THREE.PerspectiveCamera(
 	5000
 );
 camera.position.set(0, 0, 3);
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.update();
-controls.enablePan = false;
-controls.maxDistance = 100;
-controls.minDistance = 2;
-controls.enableDamping = true;
+
+const controls = new TrackballControls(camera, renderer.domElement);
+controls.rotateSpeed = 4;
+controls.zoomSpeed = 1;
+controls.panSpeed = 0.8;
+controls.noZoom = false;
+controls.noPan = true;
+controls.staticMoving = false;
+controls.dynamicDampingFactor = 0.1;
 
 // add ambient and point light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 30, 1000);
+const pointLight = new THREE.PointLight(0xffffff, 3, 1000);
 scene.add(pointLight);
 
 //add skybox
@@ -250,13 +253,13 @@ const planetMeshes = [];
 // Create and add planets using a for loop
 for (let i = 0; i < planets.length; i++) {
 	const planetName = planetNames[i];
-	const size = planetSizes[planetName];
+	const size = planetSizes[planetName] * 3;
 
 	const geometry = new THREE.SphereGeometry(size, 32, 32);
 	const texture = new THREE.TextureLoader().load(
 		`../src/assets/${planetName}.jpg`
 	);
-	const material = new THREE.MeshBasicMaterial({ map: texture });
+	const material = new THREE.MeshLambertMaterial({ map: texture });
 	const planetMesh = new THREE.Mesh(geometry, material);
 
 	scene.add(planetMesh);
@@ -270,7 +273,6 @@ const sunTexture = new THREE.TextureLoader().load("../src/assets/sun.jpg");
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
-// rotate the sun
 sun.rotation.x = Math.PI / 2;
 
 function animate() {
@@ -298,11 +300,12 @@ function animate() {
 	}
 
 	// Update current day
-	currentDay += 1;
+	currentDay += 1 / 60;
 
 	// Render the scene and camera
 	renderer.render(scene, camera);
 	requestAnimationFrame(animate);
+	controls.update();
 }
 animate();
 
