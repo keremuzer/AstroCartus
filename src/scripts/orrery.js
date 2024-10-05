@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TrackballControls } from "three/examples/jsm/Addons.js";
 
 // create scene, camera, renderer and controls
@@ -23,12 +22,14 @@ controls.noZoom = false;
 controls.noPan = true;
 controls.staticMoving = false;
 controls.dynamicDampingFactor = 0.1;
+controls.minDistance = 0.5;
+controls.maxDistance = 200;
 
 // add ambient and point light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 3, 1000);
+const pointLight = new THREE.PointLight(0xffffff, 3.5, 1000);
 scene.add(pointLight);
 
 //add skybox
@@ -253,7 +254,7 @@ const planetMeshes = [];
 // Create and add planets using a for loop
 for (let i = 0; i < planets.length; i++) {
 	const planetName = planetNames[i];
-	const size = planetSizes[planetName] * 3;
+	const size = planetSizes[planetName] * 3.5;
 
 	const geometry = new THREE.SphereGeometry(size, 32, 32);
 	const texture = new THREE.TextureLoader().load(
@@ -274,6 +275,37 @@ const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
 sun.rotation.x = Math.PI / 2;
+
+// speed controls
+const speedUpButton = document.getElementById("speed-up");
+const speedDownButton = document.getElementById("speed-down");
+const pauseButton = document.getElementById("pause");
+
+let speed = 0;
+
+speedUpButton.addEventListener("click", () => {
+	if (speed < 7 / 60) {
+		speed += 1 / 60;
+	} else if (speed < 1) {
+		speed += 14 / 60;
+	} else {
+		speed += 1 / 2;
+	}
+});
+
+speedDownButton.addEventListener("click", () => {
+	if (speed > 1) {
+		speed -= 1 / 2;
+	} else if (speed > 7 / 60) {
+		speed -= 14 / 60;
+	} else {
+		speed -= 1 / 60;
+	}
+});
+
+pauseButton.addEventListener("click", () => {
+	speed = 0;
+});
 
 function animate() {
 	let T = (currentDay - epoch) / 36525;
@@ -300,7 +332,7 @@ function animate() {
 	}
 
 	// Update current day
-	currentDay += 1 / 60;
+	currentDay += speed;
 
 	// Render the scene and camera
 	renderer.render(scene, camera);

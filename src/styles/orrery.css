@@ -1,0 +1,22 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	height: 100vh;
+}
+
+#speed-controls {
+	position: absolute;
+	bottom: 0;
+	/*center*/
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+#speed-controls button {
+	margin: 0 5px;
+}
