@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+// create scene, camera, renderer and controls
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -20,6 +21,7 @@ controls.maxDistance = 100;
 controls.minDistance = 4;
 controls.enableDamping = true;
 
+// animate scene
 const animate = function () {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
@@ -27,6 +29,7 @@ const animate = function () {
 };
 animate();
 
+// add ambient and point light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
