@@ -133,3 +133,61 @@ input::placeholder {
     background: rgba(117, 20, 124, 0.8); /* %80 opaklıkta mavi */
 }
 
+
+/* Sabit boyutlu ve ortalanmış pop-up stili */
+.popup {
+    display: none;  /*Başlangıçta gizli */
+    position: fixed; /* Sabit konum */
+    left: 100px; /* Sol kenardan uzaklık */
+    top: 50%; /* Dikey olarak ortalamak için %50 */
+    transform: translateY(+50%); /* Dikey merkezleme için yukarı kaydır */
+
+    background-color: #2a2727(255, 255, 255, 0.3); /* Yarı saydam beyaz arka plan */
+    border-radius: 12px; /* Daha büyük yuvarlak kenarlar */
+    border: 1px solid #ccc; /* Açık gri kenar */
+    width: 400px; /* Sabit genişlik */
+    height: 300px; /* Sabit yükseklik */
+    z-index: 1000; /* Diğer öğelerin üstünde görünmesi için */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Daha belirgin gölgelendirme */
+    transition: opacity 0.3s ease; /* Geçiş efekti */
+
+}
+
+/* İçerik stilleri */
+.popup {
+    display: none; /* Flexbox kullan */
+    flex-direction: column; /* İçerik dikey olarak hizalanacak */
+    justify-content: center; /* Dikey ortalama */
+    align-items: center; /* Yatay ortalama */
+    text-align: center; /* İçerikteki metinleri ortala */
+    padding: 20px; /* İçerik için biraz boşluk */
+    font-family: 'Arial', sans-serif; /* Arial sans-serif yazı tipi */
+    color: white; /* Yazı rengini beyaz yap */
+}
+/* Başlık stilleri */
+#planet-name {
+	color:white;
+    font-size: 20px; /* Başlık boyutu */
+    margin-bottom: 10px; /* Başlık ile içerik arasındaki boşluk */
+}
+/* Metin stilleri */
+#planet-description {
+	color:white;
+    font-size: 16px; /* Yazı boyutu */
+    line-height: 1.6; /* Satır arası boşluk */
+    font-weight: 300; /* Yazı ağırlığını daha ince yap */
+}
+
+.close {
+	position: absolute; /* Simgeyi pop-up'ın içinde konumlandır */
+	top: 8px; /* Üstten 10px */
+	right: 15px; /* Sağdan 10px */
+	font-size: px; /* Simge boyutu */
+	cursor: pointer; /* Üzerine gelindiğinde fare imlecini değiştirme */
+	color: white; /* Simge rengi */
+}
+/* Gösterildiğinde pop-up */
+.popup.show {
+    display: flex; /* Görünür yap */
+    opacity: 1; /* Opaklık ayarla */
+}

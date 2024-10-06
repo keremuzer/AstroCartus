@@ -517,13 +517,127 @@ function onMouseClick(event) {
 		if (planetMeshes.includes(clickedObject)) {
 			selectedPlanet = clickedObject; // Set selected planet
 			isCameraLocked = true; // Lock the camera to the selected planet
+			console.log(clickedObject);
+			const planetIndex = planetMeshes.indexOf(clickedObject);
+			const planetName = planetNames[planetIndex];
+			showPopup(planetNames[planetIndex]);
+			
 		} else if (clickedObject === sun) {
 			console.log("You clicked on the sun!");
+			showPopup(sun);
+
 		}
 	}
 }
 
 
+const planetData = {
+    mercury: {
+        name: "Mercury",
+        description: "The closest planet to the Sun."
+    },
+    venus: {
+        name: "Venus",
+        description: "The second planet from the Sun."
+    },
+    earth: {
+        name: "Earth",
+        description: "Our home planet."
+    },
+    mars: {
+        name: "Mars",
+        description: "The Red Planet."
+    },
+    jupiter: {
+        name: "Jupiter",
+        description: "The largest planet in the solar system."
+    },
+    saturn: {
+        name: "Saturn",
+        description: "Known for its rings."
+    },
+    uranus: {
+        name: "Uranus",
+        description: "The coldest planet in the solar system."
+    },
+    neptune: {
+        name: "Neptune",
+        description: "The farthest planet from the Sun."
+    },
+    sun: {
+        name: "Sun",
+        description: "The star at the center of the solar system."
+    },
+};
+
+function showPopup(planetName) {
+    const popup = document.getElementById("popup");
+    const popupPlanetName = document.getElementById("planet-name");
+    const popupPlanetDescription = document.getElementById("planet-description");
+	console.log("geldi");
+
+    const planetInfo = planetData[planetName];  // planetName ile gezegen bilgilerini al
+    if (planetInfo) {
+        popupPlanetName.textContent = planetInfo.name;  // Doğru anahtarı kullan
+        popupPlanetDescription.textContent = planetInfo.description;
+
+        // Pop-up'ı sabit bir konumda göster
+        popup.style.left = '20px'; // Sol kenarda sabit
+        popup.style.top = '50px';  // Sabit üstten mesafe
+
+        // Eski pop-up'ı gizleyip yenisini göster
+        hidePopup(); // Eski pop-up'ı gizle
+        popup.style.display = 'block'; // Yeni pop-up'ı göster
+        popup.classList.add("show");   // Görünür yap
+
+        // Kapatma simgesine tıklama olayı ekle
+        const closePopupButton = document.getElementById("close-popup");
+        closePopupButton.onclick = hidePopup; // Kapatma işlevini bağla
+    } else {
+        console.error('No data found for planet: ${planetName}'); // Hata durumunda konsola yazdır
+    }
+}
+
+function hidePopup() {
+    const popup = document.getElementById("popup");
+    popup.style.display = 'none'; // Pop-up'ı gizle
+    popup.classList.remove("show"); // Görünürlük sınıfını kaldır
+}
+
+// Pop-up'ı gösteren bir buton varsa (örneğin, "show-popup" ID'si olan bir buton)
+// Olay dinleyicisini ekleyin
+document.getElementById('speed-up').addEventListener('click', function() {
+    document.getElementById('popup').classList.add('show'); // Pop-up'ı göster
+});
+
+// Kapatma simgesine tıklama olayı
+document.getElementById('close-popup').addEventListener('click', function() {
+    document.getElementById('popup').classList.remove('show'); // Pop-up'ı gizle
+});
+
+
+// Pop-up dışında bir yere tıklanırsa pop-up'ı kapatma işlevi
+window.addEventListener('click', function(event) {
+    const popup = document.getElementById('popup');
+    const closeButton = document.getElementById('close-popup');
+    
+    // Eğer tıklanan, pop-up veya kapanma simgesi dışında bir yer ise
+    if (event.target == closeButton) {
+        popup.classList.remove('show'); // Pop-up'ı gizle
+		resetCamera();
+	}
+});
+
+
+// Pop-up kapandığında kamerayı eski haline döndür
+function resetCamera() {
+    isCameraLocked = false; // Kameranın takibini durdur
+    selectedPlanet = null;  // Seçili gezegen yok
+
+    // Kamerayı başlangıç pozisyonuna ve bakış noktasına geri getir
+    camera.position.set(0, 0, 3);  // Başlangıç pozisyonu
+
+}
 
 
 
