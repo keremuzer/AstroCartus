@@ -543,8 +543,11 @@ function onMouseClick(event) {
 
 		// Check if the object is a planet or the sun
 		if (planetMeshes.includes(clickedObject)) {
+			const planetIndex = planetMeshes.indexOf(clickedObject);
+			const planetName = planetNames[planetIndex];
 			selectedPlanet = clickedObject; // Set selected planet
 			isCameraLocked = true; // Lock the camera to the selected planet
+			showPopup(planetName)
 		} else if (clickedObject === sun) {
 			console.log("You clicked on the sun!");
 		}
