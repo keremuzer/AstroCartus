@@ -576,3 +576,45 @@ function onMouseClick(event) {
 		}
 	}
 }
+
+// HTML elemanlarını seç
+const searchBox = document.getElementById("search-box");
+const resultList = document.getElementById("result-list");
+
+// Arama kutusuna tıklanınca listeyi aç
+searchBox.addEventListener("focus", function () {
+    resultList.style.display = "block"; // Listeyi göster
+});
+
+// Arama kutusundan çıkıldığında listeyi kapatma
+searchBox.addEventListener("blur", function () {
+    setTimeout(() => {
+        resultList.style.display = "none"; // Listeyi gizle
+    }, 100); // 100ms gecikme, eleman seçimi için
+});
+
+// Arama kutusuna her yazıldığında dinleme
+searchBox.addEventListener("input", function () {
+    const searchText = searchBox.value.toLowerCase(); // Arama kutusundaki değeri küçük harfe çevir
+
+    // Filtreleme işlemi: asteroitlerin isimlerini kontrol ederiz
+    const filteredAsteroids = asteroids.filter(asteroid =>
+        asteroid.name.toLowerCase().includes(searchText)
+    );
+
+    // Sonuç listesini temizle
+    resultList.innerHTML = '';
+
+    // Filtrelenmiş sonuçları ekrana yaz
+    filteredAsteroids.forEach(asteroid => {
+        const listItem = document.createElement("li");
+        listItem.textContent = asteroid.name; // Asteroid ismini göster
+
+        // Liste elemanına tıklanınca alert göster
+        listItem.addEventListener("mousedown", () => {
+            alert(`Asteroid Name: ${asteroid.name}\nSemi-major axis: ${asteroid.a}\nEccentricity: ${asteroid.e}`);
+        });
+
+        resultList.appendChild(listItem);
+    });
+});
