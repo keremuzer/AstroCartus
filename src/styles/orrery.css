@@ -1,22 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 body {
 	margin: 0;
 	overflow: hidden;
 	height: 100vh;
+	font-family: "Roboto", sans-serif;
 }
 
 #speed-controls {
 	position: absolute;
-	bottom: 0;
+	bottom: 16px;
 	/*center*/
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 10px;
-	border-radius: 5px;
+	/*column*/
+	flex-direction: column;
 }
 
+#buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#speed-rate {
+	color: white;
+	font-size: 1.5em;
+	padding-bottom: 8px;
+}
+
+/*add glow hover effect to buttons*/
 #speed-controls button {
-	margin: 0 5px;
+	border: none;
+	background: none;
+	color: white;
+	size: 1.5em;
+	cursor: pointer;
+}
+
+#speed-controls button:hover {
+	text-shadow: 0 0 10px white;
+}
+
+.material-symbols-outlined {
+	font-size: 36px !important;
 }

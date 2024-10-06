@@ -6,21 +6,24 @@
 		<title>Document</title>
 		<link
 			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0"
 		/>
 		<link rel="stylesheet" type="text/css" href="./src/styles/orrery.css" />
 	</head>
 	<body>
 		<div id="speed-controls">
-			<button id="speed-down">
-				<span class="material-symbols-outlined"> fast_rewind </span>
-			</button>
-			<button id="pause">
-				<span class="material-symbols-outlined"> pause </span>
-			</button>
-			<button id="speed-up">
-				<span class="material-symbols-outlined"> fast_forward </span>
-			</button>
+			<div id="speed-rate">PAUSED</div>
+			<div id="buttons">
+				<button id="speed-down">
+					<span class="material-symbols-outlined"> fast_rewind </span>
+				</button>
+				<button id="pause">
+					<span class="material-symbols-outlined"> pause </span>
+				</button>
+				<button id="speed-up">
+					<span class="material-symbols-outlined"> fast_forward </span>
+				</button>
+			</div>
 		</div>
 		<script src="./src/scripts/orrery.js" type="module"></script>
 	</body>

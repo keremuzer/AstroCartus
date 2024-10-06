@@ -212,7 +212,7 @@ function findYHelio(a, eccentricAnomaly, e) {
 }
 
 let epoch = 2451545.0;
-let currentDay = 2460589.0;
+let currentDay = Date.now() / (1000 * 60 * 60 * 24); // Convert milliseconds to days
 
 // Planet parameters
 const planets = [
@@ -333,10 +333,7 @@ pauseButton.addEventListener("click", () => {
 let epochJD = 2451545.0;
 
 // Şu anki Julian Date (günümüz değeri)
-let currentJD = 2460589.0;
-
-// Zamanı 1 gün artırmak için adım
-let JD_step = 1; // 1 gün ilerletme
+let currentJD = Date.now() / (1000 * 60 * 60 * 24); // Convert milliseconds to days
 
 let asteroids = []; // Initialize as an empty array
 
@@ -444,6 +441,8 @@ function updateAsteroidPosition(asteroid, deltaJD) {
 	asteroid.meteor.position.set(newPosition[0], newPosition[1], newPosition[2]);
 }
 
+let speedRate = document.getElementById("speed-rate");
+
 function animate() {
 	let T = (currentDay - epoch) / 36525; // Time in Julian centuries since the epoch
 
@@ -470,6 +469,36 @@ function animate() {
 
 	// Update current day for planets based on speed
 	currentDay += speed;
+
+	// update speed rate
+	const speedRates = [
+		"-8 Months / second",
+		"-6 Months / second",
+		"-4 Months / second",
+		"-2 Months / second",
+		"-1 Month / second",
+		"-2 Weeks / second",
+		"-1 Week / second",
+		"-6 Days / second",
+		"-5 Days / second",
+		"-3 Days / second",
+		"-2 Days / second",
+		"-1 Day / second",
+		"Paused",
+		"1 Day / second",
+		"2 Days / second",
+		"3 Days / second",
+		"5 Days / second",
+		"6 Days / second",
+		"1 Week / second",
+		"2 Weeks / second",
+		"1 Month / second",
+		"2 Months / second",
+		"4 Months / second",
+		"6 Months / second",
+		"8 Months / second",
+	];
+	speedRate.innerHTML = `${speedRates[rates.indexOf(speed)]}`;
 
 	if (asteroids && asteroids.length > 0) {
 		// Animate only when asteroid data is available
