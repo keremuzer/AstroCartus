@@ -332,8 +332,37 @@ pauseButton.addEventListener("click", () => {
 // Başlangıç epoch değeri (2451545.0)
 let epochJD = 2451545.0;
 
+function getJulianDate() {
+	const now = new Date();
+	const year = now.getFullYear();
+	const month = now.getMonth() + 1; // January is 0, so add 1
+	const day = now.getDate();
+
+	// Julian Date formula
+	const a = Math.floor((14 - month) / 12);
+	const y = year + 4800 - a;
+	const m = month + 12 * a - 3;
+
+	const julianDay =
+		day +
+		Math.floor((153 * m + 2) / 5) +
+		365 * y +
+		Math.floor(y / 4) -
+		Math.floor(y / 100) +
+		Math.floor(y / 400) -
+		32045;
+
+	// Get fractional day by adding time part
+	const dayFraction =
+		(now.getUTCHours() - 12) / 24 +
+		now.getUTCMinutes() / 1440 +
+		now.getUTCSeconds() / 86400;
+
+	return julianDay + dayFraction;
+}
+
 // Şu anki Julian Date (günümüz değeri)
-let currentJD = 2460590.0;
+let currentJD = getJulianDate();
 
 let asteroids = []; // Initialize as an empty array
 
@@ -486,7 +515,6 @@ const dailyRotations = [
 	{ name: "Neptune", rotationsPerDay: 1.48 }, // Neptün
 ];
 
-
 // Initialize variables for selected planet and camera focus
 let selectedPlanet = null;
 let isCameraLocked = false;
@@ -523,9 +551,8 @@ function onMouseClick(event) {
 	}
 }
 
-
-
-
+// date element
+const dateElement = document.getElementById("date");
 
 function animate() {
 	let T = (currentDay - epoch) / 36525; // Time in Julian centuries since the epoch
@@ -554,10 +581,11 @@ function animate() {
 	// Update current day for planets based on speed
 	currentDay += speed;
 
-	// log the current date
+	// show the current date on the screen
 	console.log(`Current Julian Date: ${currentJD}`);
 	const date = julianToDate(currentJD);
 	console.log(`Current Date: ${date}`);
+	dateElement.innerHTML = date;
 
 	// update speed rate
 	const speedRates = [
@@ -644,13 +672,12 @@ function animate() {
 			// Make sure the camera is looking at the selected planet
 			camera.lookAt(selectedPlanet.position);
 		}
-
 	}
 
 	// Render the scene and camera
 	renderer.render(scene, camera);
-	requestAnimationFrame(animate);
 	controls.update();
+	requestAnimationFrame(animate);
 }
 animate();
 
@@ -692,8 +719,6 @@ const planetOrbits = planets.map((planet, index) => {
 
 	return orbitLine;
 });
-
-
 
 // HTML elemanlarını seç
 const searchBox = document.getElementById("search-box");
