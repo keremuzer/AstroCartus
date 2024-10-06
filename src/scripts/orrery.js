@@ -780,9 +780,9 @@ function animate() {
 		if (isCameraLocked && selectedPlanet) {
 			// Adjust camera position relative to the planet
 			camera.position.set(
-				selectedPlanet.position.x + 0.2,
-				selectedPlanet.position.y + 0.2,
-				selectedPlanet.position.z + 0.2
+				selectedPlanet.position.x + 0.4,
+				selectedPlanet.position.y + 0.4,
+				selectedPlanet.position.z + 0.4
 			);
 
 			// Make sure the camera is looking at the selected planet
