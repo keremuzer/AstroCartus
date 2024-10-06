@@ -239,14 +239,14 @@ const planetNames = [
 ];
 
 const planetSizes = {
-	mercury: 0.02,
-	venus: 0.02,
+	mercury: 0.01,
+	venus: 0.02 ,
 	earth: 0.02,
 	mars: 0.02,
-	jupiter: 0.08,
-	saturn: 0.05,
-	uranus: 0.05,
-	neptune: 0.09,
+	jupiter: 0.09,
+	saturn: 0.08 ,
+	uranus: 0.05 ,
+	neptune: 0.08 ,
 };
 
 // Array to store the planet meshes for later use
