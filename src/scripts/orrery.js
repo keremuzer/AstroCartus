@@ -393,13 +393,10 @@ function eccentricToTrueAnomaly(e, E) {
 // Asteroidleri sahneye ekle
 function objCreate(asteroids) {
 	for (let asteroid of asteroids) {
-		const meteorGeometry = new THREE.SphereGeometry(0.02, 20, 20);
-		const meteorTexture = new THREE.TextureLoader().load(
-			"../src/assets/meteor.jpg"
-		);
-		// light doesn't effect the meteor
+		const meteorGeometry = new THREE.SphereGeometry(0.01, 20, 20);
+		// grey meteor color
 		const meteorMaterial = new THREE.MeshBasicMaterial({
-			map: meteorTexture,
+			color: 0xa0a0a0,
 		});
 		const meteor = new THREE.Mesh(meteorGeometry, meteorMaterial);
 		scene.add(meteor);
@@ -408,8 +405,26 @@ function objCreate(asteroids) {
 	}
 }
 
+function updateAsteroidPosition(asteroid, deltaJD) {
+	// Calculate the updated mean anomaly based on time
+	let n = (2 * Math.PI) / (asteroid.period * 365.25); // Mean motion (rad/day)
+	let M = asteroid.M + n * deltaJD; // Updated mean anomaly
+
+	// Solve Kepler's equation to get eccentric anomaly
+	let eccentricAnomaly = meanToEccentricAnomaly(asteroid.e, M);
+
+	// Convert eccentric anomaly to true anomaly
+	asteroid.trueAnomaly = eccentricToTrueAnomaly(asteroid.e, eccentricAnomaly);
+
+	// Calculate the new position using orbital elements
+	let newPosition = determinePos(asteroid.trueAnomaly, asteroid);
+
+	// Update the position of the asteroid mesh in 3D space
+	asteroid.meteor.position.set(newPosition[0], newPosition[1], newPosition[2]);
+}
+
 function animate() {
-	let T = (currentDay - epoch) / 36525;
+	let T = (currentDay - epoch) / 36525; // Time in Julian centuries since the epoch
 
 	// Loop through each planet to update their positions
 	for (let i = 0; i < planets.length; i++) {
@@ -432,7 +447,7 @@ function animate() {
 		planetMesh.rotation.x = Math.PI / 2; // Rotate the planet to face the camera
 	}
 
-	// Update current day
+	// Update current day for planets based on speed
 	currentDay += speed;
 
 	if (asteroids && asteroids.length > 0) {
@@ -452,14 +467,14 @@ function animate() {
 			// Yeni pozisyonu hesapla
 			let currentPosition = determinePos(asteroid.trueAnomaly, asteroid);
 			asteroid.meteor.position.set(
-				currentPosition[0] * 2,
-				currentPosition[1] * 2,
+				currentPosition[0],
+				currentPosition[1],
 				currentPosition[2]
 			);
 		}
 
-		// JD'yi her karede 1 gün artır (Simülasyon her karede 1 gün ilerleyecek)
-		currentJD += JD_step;
+		// Update JD for asteroids based on speed, controlling time progression
+		currentJD += speed; // Sync speed with planets
 	}
 
 	// Render the scene and camera
