@@ -283,24 +283,45 @@ const speedDownButton = document.getElementById("speed-down");
 const pauseButton = document.getElementById("pause");
 
 let speed = 0;
+let rates = [
+	-4,
+	-3,
+	-120 / 60,
+	-60 / 60,
+	-28 / 60,
+	-14 / 60,
+	-7 / 60,
+	-6 / 60,
+	-5 / 60,
+	-3 / 60,
+	-2 / 60,
+	-1 / 60,
+	0,
+	1 / 60,
+	2 / 60,
+	3 / 60,
+	5 / 60,
+	6 / 60,
+	7 / 60,
+	14 / 60,
+	28 / 60,
+	60 / 60,
+	120 / 60,
+	3,
+	4,
+];
 
 speedUpButton.addEventListener("click", () => {
-	if (speed < 7 / 60) {
-		speed += 1 / 60;
-	} else if (speed < 1) {
-		speed += 14 / 60;
-	} else {
-		speed += 1 / 2;
+	// increase rate
+	if (speed < rates[rates.length - 1]) {
+		speed = rates[rates.indexOf(speed) + 1];
 	}
 });
 
 speedDownButton.addEventListener("click", () => {
-	if (speed > 1) {
-		speed -= 1 / 2;
-	} else if (speed > 7 / 60) {
-		speed -= 14 / 60;
-	} else {
-		speed -= 1 / 60;
+	// decrease rate
+	if (speed > rates[0]) {
+		speed = rates[rates.indexOf(speed) - 1];
 	}
 });
 
