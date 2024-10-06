@@ -212,7 +212,7 @@ function findYHelio(a, eccentricAnomaly, e) {
 }
 
 let epoch = 2451545.0;
-let currentDay = Date.now() / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+let currentDay = 2460589.0;
 
 // Planet parameters
 const planets = [
@@ -333,7 +333,10 @@ pauseButton.addEventListener("click", () => {
 let epochJD = 2451545.0;
 
 // Şu anki Julian Date (günümüz değeri)
-let currentJD = 2460590.0;
+let currentJD = 2460589.0;
+
+// Zamanı 1 gün artırmak için adım
+let JD_step = 1; // 1 gün ilerletme
 
 let asteroids = []; // Initialize as an empty array
 
@@ -441,50 +444,43 @@ function updateAsteroidPosition(asteroid, deltaJD) {
 	asteroid.meteor.position.set(newPosition[0], newPosition[1], newPosition[2]);
 }
 
-let speedRate = document.getElementById("speed-rate");
+// Initialize variables for selected planet and camera focus
+let selectedPlanet = null;
+let isCameraLocked = false;
 
-function julianToDate(julianDate) {
-	let j = julianDate + 0.5;
+// Create raycaster and mouse vector
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
-	let z = Math.floor(j);
-	let f = j - z;
+// Add event listener for clicks
+window.addEventListener("click", onMouseClick, false);
 
-	let a;
-	if (z >= 2299161) {
-		let alpha = Math.floor((z - 1867216.25) / 36524.25);
-		a = z + 1 + alpha - Math.floor(alpha / 4);
-	} else {
-		a = z;
+function onMouseClick(event) {
+	// Convert mouse position to normalized device coordinates (-1 to +1)
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	// Update the raycaster with camera and mouse position
+	raycaster.setFromCamera(mouse, camera);
+
+	// Check for intersections with planets and sun
+	const intersects = raycaster.intersectObjects([...planetMeshes, sun]);
+
+	// If there's an intersection, do something
+	if (intersects.length > 0) {
+		const clickedObject = intersects[0].object;
+
+		// Check if the object is a planet or the sun
+		if (planetMeshes.includes(clickedObject)) {
+			selectedPlanet = clickedObject; // Set selected planet
+			isCameraLocked = true; // Lock the camera to the selected planet
+		} else if (clickedObject === sun) {
+			console.log("You clicked on the sun!");
+		}
 	}
-
-	let b = a + 1524;
-	let c = Math.floor((b - 122.1) / 365.25);
-	let d = Math.floor(365.25 * c);
-	let e = Math.floor((b - d) / 30.6001);
-
-	let day = b - d - Math.floor(30.6001 * e) + f;
-	let dayInt = Math.floor(day);
-
-	let month = e < 14 ? e - 1 : e - 13;
-
-	let year = month > 2 ? c - 4716 : c - 4715;
-
-	// Return in DD/MM/YYYY format
-	return `${dayInt.toString().padStart(2, "0")}/${month
-		.toString()
-		.padStart(2, "0")}/${year}`;
 }
 
-const dailyRotations = [
-	{ name: "Mercury", rotationsPerDay: 0.017 }, // Merkür
-	{ name: "Venus", rotationsPerDay: -0.004 }, // Venüs (Geri yönde döner)
-	{ name: "Earth", rotationsPerDay: 1 }, // Dünya
-	{ name: "Mars", rotationsPerDay: 1.03 }, // Mars
-	{ name: "Jupiter", rotationsPerDay: 2.41 }, // Jüpiter
-	{ name: "Saturn", rotationsPerDay: 2.23 }, // Satürn
-	{ name: "Uranus", rotationsPerDay: -1 }, // Uranüs (Geri yönde döner)
-	{ name: "Neptune", rotationsPerDay: 1.48 }, // Neptün
-];
+
 
 function animate() {
 	let T = (currentDay - epoch) / 36525; // Time in Julian centuries since the epoch
@@ -513,58 +509,6 @@ function animate() {
 	// Update current day for planets based on speed
 	currentDay += speed;
 
-	// log the current date
-	console.log(`Current Julian Date: ${currentJD}`);
-	const date = julianToDate(currentJD);
-	console.log(`Current Date: ${date}`);
-
-	// update speed rate
-	const speedRates = [
-		"-8 Months / second",
-		"-6 Months / second",
-		"-4 Months / second",
-		"-2 Months / second",
-		"-1 Month / second",
-		"-2 Weeks / second",
-		"-1 Week / second",
-		"-6 Days / second",
-		"-5 Days / second",
-		"-3 Days / second",
-		"-2 Days / second",
-		"-1 Day / second",
-		"Paused",
-		"1 Day / second",
-		"2 Days / second",
-		"3 Days / second",
-		"5 Days / second",
-		"6 Days / second",
-		"1 Week / second",
-		"2 Weeks / second",
-		"1 Month / second",
-		"2 Months / second",
-		"4 Months / second",
-		"6 Months / second",
-		"8 Months / second",
-	];
-	speedRate.innerHTML = `${speedRates[rates.indexOf(speed)]}`;
-
-	/*// Rotate the planets based on their daily rotation rates and speed rate along y axis
-	for (let i = 0; i < planetMeshes.length; i++) {
-		const planetMesh = planetMeshes[i];
-		const planetName = planetNames[i];
-
-		// Find the corresponding planet rotation rate
-		const planetData = dailyRotations.find(
-			(planet) => planet.name === planetName
-		);
-
-		// If the planet is found, update its rotation
-		if (planetData) {
-			const rotationRate = planetData.rotationsPerDay;
-			planetMesh.rotation.y += (rotationRate / 365) * speed;
-		}
-	}*/
-
 	if (asteroids && asteroids.length > 0) {
 		// Animate only when asteroid data is available
 		for (let asteroid of asteroids) {
@@ -590,6 +534,22 @@ function animate() {
 
 		// Update JD for asteroids based on speed, controlling time progression
 		currentJD += speed; // Sync speed with planets
+
+		// Camera follows the selected planet
+		if (isCameraLocked && selectedPlanet) {
+			// Adjust camera position relative to the planet
+			camera.position.set(
+				selectedPlanet.position.x + 0.2,
+				selectedPlanet.position.y + 0.2,
+				selectedPlanet.position.z + 0.2
+			);
+
+			// Make sure the camera is looking at the selected planet
+			camera.lookAt(selectedPlanet.position);
+		}
+
+
+
 	}
 
 	// Render the scene and camera
@@ -638,38 +598,6 @@ const planetOrbits = planets.map((planet, index) => {
 	return orbitLine;
 });
 
-// Create raycaster and mouse vector
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-// Add event listener for clicks
-window.addEventListener("click", onMouseClick, false);
-
-function onMouseClick(event) {
-	// Convert mouse position to normalized device coordinates (-1 to +1)
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-	// Update the raycaster with camera and mouse position
-	raycaster.setFromCamera(mouse, camera);
-
-	// Check for intersections with planets and sun
-	const intersects = raycaster.intersectObjects([...planetMeshes, sun]);
-
-	// If there's an intersection, do something
-	if (intersects.length > 0) {
-		const clickedObject = intersects[0].object;
-
-		// Check if the object is a planet or the sun
-		if (planetMeshes.includes(clickedObject)) {
-			const planetIndex = planetMeshes.indexOf(clickedObject);
-			const planetName = planetNames[planetIndex];
-			console.log(`You clicked on ${planetName}!`);
-		} else if (clickedObject === sun) {
-			console.log("You clicked on the sun!");
-		}
-	}
-}
 
 // HTML elemanlarını seç
 const searchBox = document.getElementById("search-box");
@@ -677,70 +605,38 @@ const resultList = document.getElementById("result-list");
 
 // Arama kutusuna tıklanınca listeyi aç
 searchBox.addEventListener("focus", function () {
-	resultList.style.display = "block"; // Listeyi göster
+    resultList.style.display = "block"; // Listeyi göster
 });
 
 // Arama kutusundan çıkıldığında listeyi kapatma
 searchBox.addEventListener("blur", function () {
-	setTimeout(() => {
-		resultList.style.display = "none"; // Listeyi gizle
-	}, 100); // 100ms gecikme, eleman seçimi için
+    setTimeout(() => {
+        resultList.style.display = "none"; // Listeyi gizle
+    }, 100); // 100ms gecikme, eleman seçimi için
 });
 
 // Arama kutusuna her yazıldığında dinleme
 searchBox.addEventListener("input", function () {
-	const searchText = searchBox.value.toLowerCase(); // Arama kutusundaki değeri küçük harfe çevir
+    const searchText = searchBox.value.toLowerCase(); // Arama kutusundaki değeri küçük harfe çevir
 
-	// Filtreleme işlemi: asteroitlerin isimlerini kontrol ederiz
-	const filteredAsteroids = asteroids.filter((asteroid) =>
-		asteroid.name.toLowerCase().includes(searchText)
-	);
+    // Filtreleme işlemi: asteroitlerin isimlerini kontrol ederiz
+    const filteredAsteroids = asteroids.filter(asteroid =>
+        asteroid.name.toLowerCase().includes(searchText)
+    );
 
-	// Sonuç listesini temizle
-	resultList.innerHTML = "";
+    // Sonuç listesini temizle
+    resultList.innerHTML = '';
 
-	// Filtrelenmiş sonuçları ekrana yaz
-	filteredAsteroids.forEach((asteroid) => {
-		const listItem = document.createElement("li");
-		listItem.textContent = asteroid.name; // Asteroid ismini göster
+    // Filtrelenmiş sonuçları ekrana yaz
+    filteredAsteroids.forEach(asteroid => {
+        const listItem = document.createElement("li");
+        listItem.textContent = asteroid.name; // Asteroid ismini göster
 
-		// Liste elemanına tıklanınca alert göster
-		listItem.addEventListener("mousedown", () => {
-			alert(
-				`Asteroid Name: ${asteroid.name}\nSemi-major axis: ${asteroid.a}\nEccentricity: ${asteroid.e}`
-			);
-		});
+        // Liste elemanına tıklanınca alert göster
+        listItem.addEventListener("mousedown", () => {
+            alert(`Asteroid Name: ${asteroid.name}\nSemi-major axis: ${asteroid.a}\nEccentricity: ${asteroid.e}`);
+        });
 
-		resultList.appendChild(listItem);
-	});
+        resultList.appendChild(listItem);
+    });
 });
-
-// Animasyon Fonksiyonu
-/*function animate(asteroids) {
-	for (let asteroid of asteroids) {
-			// Epoch ile currentJD arasındaki fark
-			let deltaJD = currentJD - epochJD;
-
-			// Ortalama Anomali'yi (M) güncelle
-			let n = (2 * Math.PI) / (asteroid.period * 365.25); // Günlük açısal hız
-			let e = asteroid.e;
-			let M = asteroid.M + n * deltaJD; // Mean anomaly'yi JD farkına göre güncelle
-			
-			let eccentricAnomaly = meanToEccentricAnomaly(e, M); // Eccentric anomaly'yi bul
-			asteroid.trueAnomaly = eccentricToTrueAnomaly(e, eccentricAnomaly); // True anomaly'yi güncelle
-
-			// Yeni pozisyonu hesapla
-			let currentPosition = determinePos(asteroid.trueAnomaly, asteroid);
-			asteroid.meteor.position.set(currentPosition[0], currentPosition[1], currentPosition[2]);
-	}
-
-	// JD'yi her karede 1 gün artır (Simülasyon her karede 1 gün ilerleyecek)
-	currentJD += JD_step;
-
-	// Julian tarihi gün/ay/yıl formatında konsola yazdır
-	let normalDate = julianToDate(currentJD);
-	console.log(Yıl: ${normalDate.year}, Ay: ${normalDate.month}, Gün: ${normalDate.day});
-
-	renderer.render(scene, camera);
-	requestAnimationFrame(() => animate(asteroids));
-}*/
