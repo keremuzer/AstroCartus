@@ -333,7 +333,7 @@ pauseButton.addEventListener("click", () => {
 let epochJD = 2451545.0;
 
 // Şu anki Julian Date (günümüz değeri)
-let currentJD = Date.now() / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+let currentJD = 2460590.0;
 
 let asteroids = []; // Initialize as an empty array
 
@@ -443,6 +443,49 @@ function updateAsteroidPosition(asteroid, deltaJD) {
 
 let speedRate = document.getElementById("speed-rate");
 
+function julianToDate(julianDate) {
+	let j = julianDate + 0.5;
+
+	let z = Math.floor(j);
+	let f = j - z;
+
+	let a;
+	if (z >= 2299161) {
+		let alpha = Math.floor((z - 1867216.25) / 36524.25);
+		a = z + 1 + alpha - Math.floor(alpha / 4);
+	} else {
+		a = z;
+	}
+
+	let b = a + 1524;
+	let c = Math.floor((b - 122.1) / 365.25);
+	let d = Math.floor(365.25 * c);
+	let e = Math.floor((b - d) / 30.6001);
+
+	let day = b - d - Math.floor(30.6001 * e) + f;
+	let dayInt = Math.floor(day);
+
+	let month = e < 14 ? e - 1 : e - 13;
+
+	let year = month > 2 ? c - 4716 : c - 4715;
+
+	// Return in DD/MM/YYYY format
+	return `${dayInt.toString().padStart(2, "0")}/${month
+		.toString()
+		.padStart(2, "0")}/${year}`;
+}
+
+const dailyRotations = [
+	{ name: "Mercury", rotationsPerDay: 0.017 }, // Merkür
+	{ name: "Venus", rotationsPerDay: -0.004 }, // Venüs (Geri yönde döner)
+	{ name: "Earth", rotationsPerDay: 1 }, // Dünya
+	{ name: "Mars", rotationsPerDay: 1.03 }, // Mars
+	{ name: "Jupiter", rotationsPerDay: 2.41 }, // Jüpiter
+	{ name: "Saturn", rotationsPerDay: 2.23 }, // Satürn
+	{ name: "Uranus", rotationsPerDay: -1 }, // Uranüs (Geri yönde döner)
+	{ name: "Neptune", rotationsPerDay: 1.48 }, // Neptün
+];
+
 function animate() {
 	let T = (currentDay - epoch) / 36525; // Time in Julian centuries since the epoch
 
@@ -469,6 +512,11 @@ function animate() {
 
 	// Update current day for planets based on speed
 	currentDay += speed;
+
+	// log the current date
+	console.log(`Current Julian Date: ${currentJD}`);
+	const date = julianToDate(currentJD);
+	console.log(`Current Date: ${date}`);
 
 	// update speed rate
 	const speedRates = [
@@ -499,6 +547,23 @@ function animate() {
 		"8 Months / second",
 	];
 	speedRate.innerHTML = `${speedRates[rates.indexOf(speed)]}`;
+
+	/*// Rotate the planets based on their daily rotation rates and speed rate along y axis
+	for (let i = 0; i < planetMeshes.length; i++) {
+		const planetMesh = planetMeshes[i];
+		const planetName = planetNames[i];
+
+		// Find the corresponding planet rotation rate
+		const planetData = dailyRotations.find(
+			(planet) => planet.name === planetName
+		);
+
+		// If the planet is found, update its rotation
+		if (planetData) {
+			const rotationRate = planetData.rotationsPerDay;
+			planetMesh.rotation.y += (rotationRate / 365) * speed;
+		}
+	}*/
 
 	if (asteroids && asteroids.length > 0) {
 		// Animate only when asteroid data is available
@@ -605,3 +670,33 @@ function onMouseClick(event) {
 		}
 	}
 }
+
+// Animasyon Fonksiyonu
+/*function animate(asteroids) {
+	for (let asteroid of asteroids) {
+			// Epoch ile currentJD arasındaki fark
+			let deltaJD = currentJD - epochJD;
+
+			// Ortalama Anomali'yi (M) güncelle
+			let n = (2 * Math.PI) / (asteroid.period * 365.25); // Günlük açısal hız
+			let e = asteroid.e;
+			let M = asteroid.M + n * deltaJD; // Mean anomaly'yi JD farkına göre güncelle
+			
+			let eccentricAnomaly = meanToEccentricAnomaly(e, M); // Eccentric anomaly'yi bul
+			asteroid.trueAnomaly = eccentricToTrueAnomaly(e, eccentricAnomaly); // True anomaly'yi güncelle
+
+			// Yeni pozisyonu hesapla
+			let currentPosition = determinePos(asteroid.trueAnomaly, asteroid);
+			asteroid.meteor.position.set(currentPosition[0], currentPosition[1], currentPosition[2]);
+	}
+
+	// JD'yi her karede 1 gün artır (Simülasyon her karede 1 gün ilerleyecek)
+	currentJD += JD_step;
+
+	// Julian tarihi gün/ay/yıl formatında konsola yazdır
+	let normalDate = julianToDate(currentJD);
+	console.log(Yıl: ${normalDate.year}, Ay: ${normalDate.month}, Gün: ${normalDate.day});
+
+	renderer.render(scene, camera);
+	requestAnimationFrame(() => animate(asteroids));
+}*/
