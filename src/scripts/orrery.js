@@ -551,117 +551,119 @@ function onMouseClick(event) {
 	}
 }
 
-<<<<<<< Updated upstream
-=======
-
 const planetData = {
-    mercury: {
-        name: "Mercury",
-        description: "The closest planet Despite its proximity to the Sun, Mercury is not the hottest planet in our solar system, thanks to its dense atmosphere. But Mercury is the fastest planet, zipping around the Sun every 88 Earth days.to the Sun. From an average distance of 36 million miles (58 million kilometers), Mercury is 0.4 astronomical units away from the Sun. From this distance, it takes sunlight 3.2 minutes to travel from the Sun to Mercury."
-    },
-    venus: {
-        name: "Venus",
-        description: "Venus is the second planet from the Sun, and Earth's closest planetary neighbor. Venus is the third brightest object in the sky after the Sun and Moon. Venus spins slowly in the opposite direction from most planets. Thirty miles up (about 50 kilometers) from the surface of Venus temperatures range from 86 to 158 Fahrenheit (30 to 70 Celsius). This temperature range could accommodate Earthly life, such as “extremophile” microbes. And atmospheric pressure at that height is similar to what we find on Earth’s surface."
-    },
-    earth: {
-        name: "Earth",
-        description: "While Earth is only the fifth largest planet in the solar system, it is the only world in our solar system with liquid water on the surface. With an equatorial diameter of 7926 miles (12,760 kilometers), Earth is the biggest of the terrestrial planets and the fifth largest planet in our solar system. From an average distance of 93 million miles (150 million kilometers), Earth is exactly one astronomical unit away from the Sun because one astronomical unit (abbreviated as AU), is the distance from the Sun to Earth."
-    },
-    mars: {
-        name: "Mars",
-        description: "Mars is one of the most explored bodies in our solar system, and it's the only planet where we've sent rovers to roam the alien landscape. NASA missions have found lots of evidence that Mars was much wetter and warmer, with a thicker atmosphere, billions of years ago. With a radius of 2,106 miles (3,390 kilometers), Mars is about half the size of Earth. From an average distance of 142 million miles (228 million kilometers), Mars is 1.5 astronomical units away from the Sun."
-    },
-    jupiter: {
-        name: "Jupiter",
-        description: "Jupiter is a world of extremes. It's the largest planet in our solar system. It's also the oldest planet, forming from the dust and gases left over from the Sun's formation 4.6 billion years ago. But it has the shortest day in the solar system, taking only 10.5 hours to spin around once on its axis.With a radius of 43,440.7 miles (69,911 kilometers), Jupiter is 11 times wider than Earth.From an average distance of 484 million miles (778 million kilometers), Jupiter is 5.2 astronomical units away from the Sun."
-    },
-    saturn: {
-        name: "Saturn",
-        description: "Saturn is the sixth planet from the Sun, and the second-largest planet in our solar system. Saturn is a massive ball made mostly of hydrogen and helium. Saturn is not the only planet to have rings, but none are as spectacular or as complex as Saturn's. With an equatorial diameter of about 74,897 miles (120,500 kilometers), Saturn is 9 times wider than Earth. From an average distance of 886 million miles (1.4 billion kilometers), Saturn is 9.5 astronomical units away from the Sun.  Saturn also has dozens of moons."
-    },
-    uranus: {
-        name: "Uranus",
-        description: "Uranus is the seventh planet from the Sun, and it has the third largest diameter of planets in our solar system. Uranus is a very cold and windy world.  The temperatures, pressures, and materials that characterize this planet are most likely too extreme and volatile for organisms to adapt to. With an equatorial diameter of 31,763 miles (51,118 kilometers), Uranus is four times wider than Earth. From an average distance of 1.8 billion miles (2.9 billion kilometers), Uranus is about 19 astronomical units away from the Sun."
-    },
-    neptune: {
-        name: "Neptune",
-        description: "Neptune is the eighth and most distant planet in our solar system. Dark, cold, and whipped by supersonic winds, ice giant Neptune is more than 30 times as far from the Sun as Earth. Neptune is the only planet in our solar system not visible to the naked eye. With an equatorial diameter of 30,775 miles (49,528 kilometers), Neptune is about four times wider than Earth. From an average distance of 2.8 billion miles (4.5 billion kilometers), Neptune is 30 astronomical units away from the Sun."
-    },
-    sun: {
-        name: "Sun",
-        description: "The Sun is the star at the heart of our solar system. Its gravity holds the solar system together, keeping everything — from the biggest planets to the smallest bits of debris — in its orbit."
-    },
+	mercury: {
+		name: "Mercury",
+		description:
+			"The closest planet Despite its proximity to the Sun, Mercury is not the hottest planet in our solar system, thanks to its dense atmosphere. But Mercury is the fastest planet, zipping around the Sun every 88 Earth days.to the Sun. From an average distance of 36 million miles (58 million kilometers), Mercury is 0.4 astronomical units away from the Sun. From this distance, it takes sunlight 3.2 minutes to travel from the Sun to Mercury.",
+	},
+	venus: {
+		name: "Venus",
+		description:
+			"Venus is the second planet from the Sun, and Earth's closest planetary neighbor. Venus is the third brightest object in the sky after the Sun and Moon. Venus spins slowly in the opposite direction from most planets. Thirty miles up (about 50 kilometers) from the surface of Venus temperatures range from 86 to 158 Fahrenheit (30 to 70 Celsius). This temperature range could accommodate Earthly life, such as “extremophile” microbes. And atmospheric pressure at that height is similar to what we find on Earth’s surface.",
+	},
+	earth: {
+		name: "Earth",
+		description:
+			"While Earth is only the fifth largest planet in the solar system, it is the only world in our solar system with liquid water on the surface. With an equatorial diameter of 7926 miles (12,760 kilometers), Earth is the biggest of the terrestrial planets and the fifth largest planet in our solar system. From an average distance of 93 million miles (150 million kilometers), Earth is exactly one astronomical unit away from the Sun because one astronomical unit (abbreviated as AU), is the distance from the Sun to Earth.",
+	},
+	mars: {
+		name: "Mars",
+		description:
+			"Mars is one of the most explored bodies in our solar system, and it's the only planet where we've sent rovers to roam the alien landscape. NASA missions have found lots of evidence that Mars was much wetter and warmer, with a thicker atmosphere, billions of years ago. With a radius of 2,106 miles (3,390 kilometers), Mars is about half the size of Earth. From an average distance of 142 million miles (228 million kilometers), Mars is 1.5 astronomical units away from the Sun.",
+	},
+	jupiter: {
+		name: "Jupiter",
+		description:
+			"Jupiter is a world of extremes. It's the largest planet in our solar system. It's also the oldest planet, forming from the dust and gases left over from the Sun's formation 4.6 billion years ago. But it has the shortest day in the solar system, taking only 10.5 hours to spin around once on its axis.With a radius of 43,440.7 miles (69,911 kilometers), Jupiter is 11 times wider than Earth.From an average distance of 484 million miles (778 million kilometers), Jupiter is 5.2 astronomical units away from the Sun.",
+	},
+	saturn: {
+		name: "Saturn",
+		description:
+			"Saturn is the sixth planet from the Sun, and the second-largest planet in our solar system. Saturn is a massive ball made mostly of hydrogen and helium. Saturn is not the only planet to have rings, but none are as spectacular or as complex as Saturn's. With an equatorial diameter of about 74,897 miles (120,500 kilometers), Saturn is 9 times wider than Earth. From an average distance of 886 million miles (1.4 billion kilometers), Saturn is 9.5 astronomical units away from the Sun.  Saturn also has dozens of moons.",
+	},
+	uranus: {
+		name: "Uranus",
+		description:
+			"Uranus is the seventh planet from the Sun, and it has the third largest diameter of planets in our solar system. Uranus is a very cold and windy world.  The temperatures, pressures, and materials that characterize this planet are most likely too extreme and volatile for organisms to adapt to. With an equatorial diameter of 31,763 miles (51,118 kilometers), Uranus is four times wider than Earth. From an average distance of 1.8 billion miles (2.9 billion kilometers), Uranus is about 19 astronomical units away from the Sun.",
+	},
+	neptune: {
+		name: "Neptune",
+		description:
+			"Neptune is the eighth and most distant planet in our solar system. Dark, cold, and whipped by supersonic winds, ice giant Neptune is more than 30 times as far from the Sun as Earth. Neptune is the only planet in our solar system not visible to the naked eye. With an equatorial diameter of 30,775 miles (49,528 kilometers), Neptune is about four times wider than Earth. From an average distance of 2.8 billion miles (4.5 billion kilometers), Neptune is 30 astronomical units away from the Sun.",
+	},
+	sun: {
+		name: "Sun",
+		description:
+			"The Sun is the star at the heart of our solar system. Its gravity holds the solar system together, keeping everything — from the biggest planets to the smallest bits of debris — in its orbit.",
+	},
 };
 
 function showPopup(planetName) {
-    const popup = document.getElementById("popup");
-    const popupPlanetName = document.getElementById("planet-name");
-    const popupPlanetDescription = document.getElementById("planet-description");
+	const popup = document.getElementById("popup");
+	const popupPlanetName = document.getElementById("planet-name");
+	const popupPlanetDescription = document.getElementById("planet-description");
 	console.log("geldi");
 
-    const planetInfo = planetData[planetName];  // planetName ile gezegen bilgilerini al
-    if (planetInfo) {
-        popupPlanetName.textContent = planetInfo.name;  // Doğru anahtarı kullan
-        popupPlanetDescription.textContent = planetInfo.description;
+	const planetInfo = planetData[planetName]; // planetName ile gezegen bilgilerini al
+	if (planetInfo) {
+		popupPlanetName.textContent = planetInfo.name; // Doğru anahtarı kullan
+		popupPlanetDescription.textContent = planetInfo.description;
 
-        // Pop-up'ı sabit bir konumda göster
-        popup.style.left = '20px'; // Sol kenarda sabit
-        popup.style.top = '50px';  // Sabit üstten mesafe
+		// Pop-up'ı sabit bir konumda göster
+		popup.style.left = "20px"; // Sol kenarda sabit
+		popup.style.top = "50px"; // Sabit üstten mesafe
 
-        // Eski pop-up'ı gizleyip yenisini göster
-        hidePopup(); // Eski pop-up'ı gizle
-        popup.style.display = 'block'; // Yeni pop-up'ı göster
-        popup.classList.add("show");   // Görünür yap
+		// Eski pop-up'ı gizleyip yenisini göster
+		hidePopup(); // Eski pop-up'ı gizle
+		popup.style.display = "block"; // Yeni pop-up'ı göster
+		popup.classList.add("show"); // Görünür yap
 
-        // Kapatma simgesine tıklama olayı ekle
-        const closePopupButton = document.getElementById("close-popup");
-        closePopupButton.onclick = hidePopup; // Kapatma işlevini bağla
-    } else {
-        console.error('No data found for planet: ${planetName}'); // Hata durumunda konsola yazdır
-    }
+		// Kapatma simgesine tıklama olayı ekle
+		const closePopupButton = document.getElementById("close-popup");
+		closePopupButton.onclick = hidePopup; // Kapatma işlevini bağla
+	} else {
+		console.error("No data found for planet: ${planetName}"); // Hata durumunda konsola yazdır
+	}
 }
 
 function hidePopup() {
-    const popup = document.getElementById("popup");
-    popup.style.display = 'none'; // Pop-up'ı gizle
-    popup.classList.remove("show"); // Görünürlük sınıfını kaldır
+	const popup = document.getElementById("popup");
+	popup.style.display = "none"; // Pop-up'ı gizle
+	popup.classList.remove("show"); // Görünürlük sınıfını kaldır
 }
 
 // Pop-up'ı gösteren bir buton varsa (örneğin, "show-popup" ID'si olan bir buton)
 // Olay dinleyicisini ekleyin
-document.getElementById('speed-up').addEventListener('click', function() {
-    document.getElementById('popup').classList.add('show'); // Pop-up'ı göster
+document.getElementById("speed-up").addEventListener("click", function () {
+	document.getElementById("popup").classList.add("show"); // Pop-up'ı göster
 });
 
 // Kapatma simgesine tıklama olayı
-document.getElementById('close-popup').addEventListener('click', function() {
-    document.getElementById('popup').classList.remove('show'); // Pop-up'ı gizle
+document.getElementById("close-popup").addEventListener("click", function () {
+	document.getElementById("popup").classList.remove("show"); // Pop-up'ı gizle
 });
 
-
 // Pop-up dışında bir yere tıklanırsa pop-up'ı kapatma işlevi
-window.addEventListener('click', function(event) {
-    const popup = document.getElementById('popup');
-    const closeButton = document.getElementById('close-popup');
-    
-    // Eğer tıklanan, pop-up veya kapanma simgesi dışında bir yer ise
-    if (event.target == closeButton) {
-        popup.classList.remove('show'); // Pop-up'ı gizle
+window.addEventListener("click", function (event) {
+	const popup = document.getElementById("popup");
+	const closeButton = document.getElementById("close-popup");
+
+	// Eğer tıklanan, pop-up veya kapanma simgesi dışında bir yer ise
+	if (event.target == closeButton) {
+		popup.classList.remove("show"); // Pop-up'ı gizle
 		resetCamera();
 	}
 });
 
-
 // Pop-up kapandığında kamerayı eski haline döndür
 function resetCamera() {
-    isCameraLocked = false; // Kameranın takibini durdur
-    selectedPlanet = null;  // Seçili gezegen yok
+	isCameraLocked = false; // Kameranın takibini durdur
+	selectedPlanet = null; // Seçili gezegen yok
 
-    // Kamerayı başlangıç pozisyonuna ve bakış noktasına geri getir
-    camera.position.set(0, 0, 3);  // Başlangıç pozisyonu
-
+	// Kamerayı başlangıç pozisyonuna ve bakış noktasına geri getir
+	camera.position.set(0, 0, 3); // Başlangıç pozisyonu
 }
->>>>>>> Stashed changes
 // date element
 const dateElement = document.getElementById("date");
 
@@ -880,4 +882,3 @@ searchBox.addEventListener("input", function () {
 		resultList.appendChild(listItem);
 	});
 });
-
