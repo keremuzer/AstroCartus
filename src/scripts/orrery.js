@@ -871,50 +871,39 @@ searchBox.addEventListener("input", function () {
 
 		// Liste elemanına tıklanınca alert göster
 		listItem.addEventListener("mousedown", () => {
-			alert(
-				`Asteroid Name: ${asteroid.name}\n
-				Semi-major axis: ${asteroid.a}\n
-				Eccentricity: ${asteroid.e}\n
-				Argument of Perihelion: ${asteroid.argOfPeri}\n
-				Longitute of Ascending Node: ${asteroid.longNode}\n
-				Mean Anomaly: ${asteroid.M}\n
-				Period (year): ${asteroid.period}`
-			);
+
+			let popup = document.getElementById("popup");
+			let popupPlanetName = document.getElementById("planet-name");
+			let popupPlanetDescription = document.getElementById("planet-description");
+			
+
+			popupPlanetName.innerHTML = asteroid.name; // Doğru anahtarı kullan
+			popupPlanetDescription.innerHTML = `Asteroid Name: ${asteroid.name}\n <br>
+			Semi-major axis: ${asteroid.a}\n  <br>
+			Eccentricity: ${asteroid.e}\n  <br>
+			Argument of Perihelion: ${asteroid.argOfPeri}\n  <br>
+			Longitute of Ascending Node: ${asteroid.longNode}\n  <br>
+			Mean Anomaly: ${asteroid.M}\n  <br>
+			Period (year): ${asteroid.period}`; 
+	
+			// Pop-up'ı sabit bir konumda göster
+			popup.style.left = "20px"; // Sol kenarda sabit
+			popup.style.top = "50px"; // Sabit üstten mesafe
+	
+			// Eski pop-up'ı gizleyip yenisini göster
+			hidePopup(); // Eski pop-up'ı gizle
+			popup.style.display = "block"; // Yeni pop-up'ı göster
+			popup.classList.add("show"); // Görünür yap
+	
+			// Kapatma simgesine tıklama olayı ekle
+			const closePopupButton = document.getElementById("close-popup");
+			closePopupButton.onclick = hidePopup; // Kapatma işlevini bağla
+		
 		});
 
 		resultList.appendChild(listItem);
 	});
 });
-
-// Animasyon Fonksiyonu
-/*function animate(asteroids) {
-	for (let asteroid of asteroids) {
-			// Epoch ile currentJD arasındaki fark
-			let deltaJD = currentJD - epochJD;
-
-			// Ortalama Anomali'yi (M) güncelle
-			let n = (2 * Math.PI) / (asteroid.period * 365.25); // Günlük açısal hız
-			let e = asteroid.e;
-			let M = asteroid.M + n * deltaJD; // Mean anomaly'yi JD farkına göre güncelle
-			
-			let eccentricAnomaly = meanToEccentricAnomaly(e, M); // Eccentric anomaly'yi bul
-			asteroid.trueAnomaly = eccentricToTrueAnomaly(e, eccentricAnomaly); // True anomaly'yi güncelle
-
-			// Yeni pozisyonu hesapla
-			let currentPosition = determinePos(asteroid.trueAnomaly, asteroid);
-			asteroid.meteor.position.set(currentPosition[0], currentPosition[1], currentPosition[2]);
-	}
-
-	// JD'yi her karede 1 gün artır (Simülasyon her karede 1 gün ilerleyecek)
-	currentJD += JD_step;
-
-	// Julian tarihi gün/ay/yıl formatında konsola yazdır
-	let normalDate = julianToDate(currentJD);
-	console.log(Yıl: ${normalDate.year}, Ay: ${normalDate.month}, Gün: ${normalDate.day});
-
-	renderer.render(scene, camera);
-	requestAnimationFrame(() => animate(asteroids));
-}*/
 
 // Function to generate asteroid orbits
 const asteroidOrbits = asteroids.map((asteroid) => {
