@@ -882,3 +882,62 @@ searchBox.addEventListener("input", function () {
 		resultList.appendChild(listItem);
 	});
 });
+
+// Animasyon Fonksiyonu
+/*function animate(asteroids) {
+	for (let asteroid of asteroids) {
+			// Epoch ile currentJD arasındaki fark
+			let deltaJD = currentJD - epochJD;
+
+			// Ortalama Anomali'yi (M) güncelle
+			let n = (2 * Math.PI) / (asteroid.period * 365.25); // Günlük açısal hız
+			let e = asteroid.e;
+			let M = asteroid.M + n * deltaJD; // Mean anomaly'yi JD farkına göre güncelle
+			
+			let eccentricAnomaly = meanToEccentricAnomaly(e, M); // Eccentric anomaly'yi bul
+			asteroid.trueAnomaly = eccentricToTrueAnomaly(e, eccentricAnomaly); // True anomaly'yi güncelle
+
+			// Yeni pozisyonu hesapla
+			let currentPosition = determinePos(asteroid.trueAnomaly, asteroid);
+			asteroid.meteor.position.set(currentPosition[0], currentPosition[1], currentPosition[2]);
+	}
+
+	// JD'yi her karede 1 gün artır (Simülasyon her karede 1 gün ilerleyecek)
+	currentJD += JD_step;
+
+	// Julian tarihi gün/ay/yıl formatında konsola yazdır
+	let normalDate = julianToDate(currentJD);
+	console.log(Yıl: ${normalDate.year}, Ay: ${normalDate.month}, Gün: ${normalDate.day});
+
+	renderer.render(scene, camera);
+	requestAnimationFrame(() => animate(asteroids));
+}*/
+
+// Function to generate asteroid orbits
+const asteroidOrbits = asteroids.map((asteroid) => {
+	const orbitPoints = [];
+
+	// Create points around the orbit (full 360 degrees)
+	for (let angle = 0; angle <= 360; angle += 1) {
+		const meanAnomaly = angle * (Math.PI / 180); // Convert degrees to radians
+		const eccentricAnomaly = eccentricAnomalyCalculator(
+			meanAnomaly,
+			asteroid.e
+		);
+		const xHelio = findXHelio(asteroid.a, eccentricAnomaly, asteroid.e);
+		const yHelio = findYHelio(asteroid.a, eccentricAnomaly, asteroid.e);
+		orbitPoints.push(new THREE.Vector3(xHelio, yHelio, 0));
+	}
+
+	const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+
+	// Set asteroid orbit color (you can customize this)
+	const orbitMaterial = new THREE.LineBasicMaterial({
+		color: 0x808080, // Gray color for asteroids
+	});
+
+	const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
+	scene.add(orbitLine);
+
+	return orbitLine;
+});
