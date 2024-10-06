@@ -20,3 +20,88 @@ body {
 #speed-controls button {
 	margin: 0 5px;
 }
+
+/* Sağda sabitlenecek arama kutusu */
+.search-container {
+    position: fixed;
+    right: 0; /* Sağa hizalanacak */
+    top: 50px; /* Yukarıdan 50px mesafe olacak */
+    width: 300px; /* Arama kutusu genişliği */
+    padding: 10px;
+    background-color: rgba(0,0,0,0.1); /* Arka plan saydam olacak */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Sol tarafa hafif gölge */
+    z-index: 10; /* Üstte görünmesi için z-index ekliyoruz */
+} 
+
+#search-box {
+    width: 93%; /* Kutunun tamamını kaplayacak */
+    padding: 10px;
+    border: 1px solid #ccc;
+	background-color: rgba(0,0,0,0.1); /* Arka plan saydam olacak */
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#result-list {
+    list-style-type: none;
+    padding: 0;
+	border: 1px solid #ddd;
+
+	background-color: rgba(0,0,0,0.1); /* Arka plan saydam olacak */
+    margin: 10px 0 0 0;
+    max-height: 400px; /* Liste yüksekliğini sınırla */
+    overflow-y: auto; /* Taşan sonuçlar kaydırılabilir olacak */
+}
+
+#result-list li {
+	color:white;
+    padding: 10px;
+    border: 0.5px solid #ddd;
+    margin-top: -1px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+	background-color: rgba(0,0,0,0.1); /* Arka plan saydam olacak */
+
+}
+
+#result-list li:hover {
+    border: 3px solid purple;
+}
+
+/* Arama kutusuna yazılan metnin rengini değiştirme */
+input[type="text"],
+input[type="search"] {
+    color: white; /* Metin rengi kırmızı olacak */
+    font-size: 16px; /* Metin boyutu */
+}
+
+/* Arama kutusunun placeholder metin rengini değiştirme */
+input::placeholder {
+    color: gray; /* Placeholder rengi */
+}
+
+/* Kaydırma çubuğunun genişliğini ayarlama */
+::-webkit-scrollbar {
+    width: 10px; /* Çubuğun genişliği */
+	height: 10px;
+}
+
+/* Kaydırma çubuğu arka planı (track) */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); /* Saydam siyah */
+}
+
+/* Kaydırma çubuğunun tutamağı (thumb) */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.8); /* %80 opaklıkta mavi */
+	
+	height: 20px;
+    border-radius: 10px; /* Yuvarlatılmış köşeler */
+
+}
+
+/* Kaydırma çubuğu üzerine gelindiğinde */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(117, 20, 124, 0.8); /* %80 opaklıkta mavi */
+}
+
