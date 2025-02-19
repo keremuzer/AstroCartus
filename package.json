@@ -1,10 +1,13 @@
 {
-  "dependencies": {
-    "http-server": "^14.1.1",
-    "three": "^0.169.0",
-    "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "vite": "^5.4.8"
-  }
+	"dependencies": {
+		"http-server": "^14.1.1",
+		"three": "^0.169.0",
+		"xlsx": "^0.18.5"
+	},
+	"devDependencies": {
+		"vite": "^5.4.8"
+	},
+	"scripts": {
+		"start": "vite"
+	}
 }

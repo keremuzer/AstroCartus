@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/Addons.js";
-import * as XLSX from "xlsx";
+//import * as THREE from "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js";
+//import { TrackballControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/TrackballControls.js";
+//import * as XLSX from "https://cdn.jsdelivr.net/npm/xlsx@latest/xlsx.mjs";
 
 // create scene, camera, renderer and controls
 const renderer = new THREE.WebGLRenderer();
@@ -15,7 +15,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 0, 3);
 
-const controls = new TrackballControls(camera, renderer.domElement);
+const controls = new THREE.TrackballControls(camera, renderer.domElement);
 controls.rotateSpeed = 3.5;
 controls.zoomSpeed = 1;
 controls.panSpeed = 0.8;
@@ -27,21 +27,21 @@ controls.minDistance = 0.5;
 controls.maxDistance = 200;
 
 // add ambient and point light
-const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 3.5, 1000);
+const pointLight = new THREE.PointLight(0xffffff, 1.2, 1000);
 scene.add(pointLight);
 
 //add skybox
 const loader = new THREE.CubeTextureLoader();
 const textureCube = loader.load([
-	"../src/assets/px.png",
-	"../src/assets/nx.png",
-	"../src/assets/py.png",
-	"../src/assets/ny.png",
-	"../src/assets/pz.png",
-	"../src/assets/nz.png",
+	"./src/assets/px.png",
+	"./src/assets/nx.png",
+	"./src/assets/py.png",
+	"./src/assets/ny.png",
+	"./src/assets/pz.png",
+	"./src/assets/nz.png",
 ]);
 scene.background = textureCube;
 
@@ -240,13 +240,13 @@ const planetNames = [
 
 const planetSizes = {
 	mercury: 0.01,
-	venus: 0.02 ,
+	venus: 0.02,
 	earth: 0.02,
 	mars: 0.02,
 	jupiter: 0.09,
-	saturn: 0.08 ,
-	uranus: 0.05 ,
-	neptune: 0.08 ,
+	saturn: 0.08,
+	uranus: 0.05,
+	neptune: 0.08,
 };
 
 // Array to store the planet meshes for later use
@@ -259,7 +259,7 @@ for (let i = 0; i < planets.length; i++) {
 
 	const geometry = new THREE.SphereGeometry(size, 32, 32);
 	const texture = new THREE.TextureLoader().load(
-		`../src/assets/${planetName}.jpg`
+		`./src/assets/${planetName}.jpg`
 	);
 	const material = new THREE.MeshLambertMaterial({ map: texture });
 	const planetMesh = new THREE.Mesh(geometry, material);
@@ -271,7 +271,7 @@ for (let i = 0; i < planets.length; i++) {
 
 // Sun
 const sunGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-const sunTexture = new THREE.TextureLoader().load("../src/assets/sun.jpg");
+const sunTexture = new THREE.TextureLoader().load("./src/assets/sun.jpg");
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
@@ -448,7 +448,7 @@ function objCreate(asteroids) {
 		const meteor = new THREE.Mesh(meteorGeometry, meteorMaterial);
 		scene.add(meteor);
 		asteroid.meteor = meteor;
-		console.log(asteroid);
+		//console.log(asteroid);
 	}
 }
 
@@ -547,7 +547,7 @@ function onMouseClick(event) {
 			const planetName = planetNames[planetIndex];
 			selectedPlanet = clickedObject; // Set selected planet
 			isCameraLocked = true; // Lock the camera to the selected planet
-			showPopup(planetName)
+			showPopup(planetName);
 		} else if (clickedObject === sun) {
 			console.log("You clicked on the sun!");
 		}
@@ -606,7 +606,7 @@ function showPopup(planetName) {
 	const popup = document.getElementById("popup");
 	const popupPlanetName = document.getElementById("planet-name");
 	const popupPlanetDescription = document.getElementById("planet-description");
-	console.log("geldi");
+	//console.log("geldi");
 
 	const planetInfo = planetData[planetName]; // planetName ile gezegen bilgilerini al
 	if (planetInfo) {
@@ -635,12 +635,6 @@ function hidePopup() {
 	popup.style.display = "none"; // Pop-up'ı gizle
 	popup.classList.remove("show"); // Görünürlük sınıfını kaldır
 }
-
-// Pop-up'ı gösteren bir buton varsa (örneğin, "show-popup" ID'si olan bir buton)
-// Olay dinleyicisini ekleyin
-document.getElementById("speed-up").addEventListener("click", function () {
-	document.getElementById("popup").classList.add("show"); // Pop-up'ı göster
-});
 
 // Kapatma simgesine tıklama olayı
 document.getElementById("close-popup").addEventListener("click", function () {
@@ -698,9 +692,9 @@ function animate() {
 	currentDay += speed;
 
 	// show the current date on the screen
-	console.log(`Current Julian Date: ${currentJD}`);
+	//console.log(`Current Julian Date: ${currentJD}`);
 	const date = julianToDate(currentJD);
-	console.log(`Current Date: ${date}`);
+	//console.log(`Current Date: ${date}`);
 	dateElement.innerHTML = date;
 
 	// update speed rate
@@ -871,11 +865,10 @@ searchBox.addEventListener("input", function () {
 
 		// Liste elemanına tıklanınca alert göster
 		listItem.addEventListener("mousedown", () => {
-
 			let popup = document.getElementById("popup");
 			let popupPlanetName = document.getElementById("planet-name");
-			let popupPlanetDescription = document.getElementById("planet-description");
-			
+			let popupPlanetDescription =
+				document.getElementById("planet-description");
 
 			popupPlanetName.innerHTML = asteroid.name; // Doğru anahtarı kullan
 			popupPlanetDescription.innerHTML = `Asteroid Name: ${asteroid.name}\n <br>
@@ -884,21 +877,20 @@ searchBox.addEventListener("input", function () {
 			Argument of Perihelion: ${asteroid.argOfPeri}\n  <br>
 			Longitute of Ascending Node: ${asteroid.longNode}\n  <br>
 			Mean Anomaly: ${asteroid.M}\n  <br>
-			Period (year): ${asteroid.period}`; 
-	
+			Period (year): ${asteroid.period}`;
+
 			// Pop-up'ı sabit bir konumda göster
 			popup.style.left = "20px"; // Sol kenarda sabit
 			popup.style.top = "50px"; // Sabit üstten mesafe
-	
+
 			// Eski pop-up'ı gizleyip yenisini göster
 			hidePopup(); // Eski pop-up'ı gizle
 			popup.style.display = "block"; // Yeni pop-up'ı göster
 			popup.classList.add("show"); // Görünür yap
-	
+
 			// Kapatma simgesine tıklama olayı ekle
 			const closePopupButton = document.getElementById("close-popup");
 			closePopupButton.onclick = hidePopup; // Kapatma işlevini bağla
-		
 		});
 
 		resultList.appendChild(listItem);
